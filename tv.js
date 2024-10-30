@@ -1,4 +1,4 @@
-// Giả lập dữ liệu sách
+// Giả lập dữ liệu sách và người dùng
 let books = [
     { title: 'Bầu trời năm ấy', author: 'Tác giả A', category: 'Văn học', image: 'assets/bt.jpg', available: 3 },
     { title: 'Dế mèn phiêu lưu kí', author: 'Tác giả B', category: 'Văn học', image: 'assets/de.jpg', available: 5 },
@@ -20,124 +20,113 @@ let books = [
     { title: 'Nhà giả kim', author: 'Tác giả Z', category: 'Văn học', image: 'assets/ngk.jpg', available: 2 },
 ];
 
-// Xử lý tìm kiếm sách
-document.getElementById('search-form').addEventListener('submit', function(event) {
-    event.preventDefault(); // Ngăn form reload trang
-    const query = document.getElementById('search-query').value.toLowerCase();
-    const searchResults = books.filter(book => book.title.toLowerCase().includes(query));
-    displaySearchResults(searchResults);
-});
-// Hàm hiển thị tất cả các sách
-function showAllBooks() {
-    const results = document.getElementById('search-results');
-    results.innerHTML = ''; // Xóa kết quả tìm kiếm
-    results.style.display = 'block'; // Hiển thị lại danh sách sách
-    document.getElementById('back-button').style.display = 'none'; // Ẩn nút quay lại
-
-    // Hiển thị tất cả sách
-    books.forEach(book => {
-        const li = document.createElement('div');
-        li.className = 'book-item'; // Thêm class cho từng sách
-        li.innerHTML = `
-            <img src="${book.image}" alt="${book.title}">
-            <div class="book-details">
-                <strong>${book.title}</strong> - ${book.author} <br>
-                Thể loại: ${book.category} <br>
-                Còn lại: ${book.available} quyển
-            </div>
-            <button onclick="borrowBook('${book.title}')">Mượn sách</button>
-        `;
-        results.appendChild(li);
-    });
-}
-
-// Hiển thị kết quả tìm kiếm
-function displaySearchResults(books) {
-    const results = document.getElementById('search-results');
-    results.innerHTML = ''; // Xóa kết quả cũ
-    if (books.length > 0) {
-        books.forEach(book => {
-            const li = document.createElement('div');
-            li.className = 'book-item'; // Thêm class cho từng sách
-            li.innerHTML = `
-                <img src="${book.image}" alt="${book.title}">
-                <div class="book-details">
-                    <strong>${book.title}</strong> - ${book.author} <br>
-                    Thể loại: ${book.category} <br>
-                    Còn lại: ${book.available} quyển
-                </div>
-                <button onclick="borrowBook('${book.title}')">Mượn sách</button>
-            `;
-            results.appendChild(li);
-        });
-        document.getElementById('back-button').style.display = 'block'; // Hiển thị nút quay lại
-    } else {
-        results.innerHTML = '<p>Không tìm thấy sách nào</p>';
-        document.getElementById('back-button').style.display = 'none'; // Ẩn nút quay lại nếu không có kết quả
-    }
-}
-
-
-// Hiển thị kết quả tìm kiếm
-function displaySearchResults(books) {
-    const results = document.getElementById('search-results');
-    results.innerHTML = ''; // Xóa kết quả cũ
-    if (books.length > 0) {
-        books.forEach(book => {
-            const li = document.createElement('div');
-            li.className = 'book-item'; // Thêm class cho từng sách
-            li.innerHTML = `
-                <img src="${book.image}" alt="${book.title}">
-                <div class="book-details">
-                    <strong>${book.title}</strong> - ${book.author} <br>
-                    Thể loại: ${book.category} <br>
-                    Còn lại: ${book.available} quyển
-                </div>
-                <button onclick="borrowBook('${book.title}')">Mượn sách</button>
-            `;
-            results.appendChild(li);
-        });
-        document.getElementById('back-button').style.display = 'block';
-    } else {
-        results.innerHTML = '<p>Không tìm thấy sách nào</p>';
-        document.getElementById('back-button').style.display = 'none';
-    }
-}
-
-// Xử lý mượn sách
-function borrowBook(bookTitle) {
-    alert(`Bạn đã chọn mượn sách: ${bookTitle}`);
-}
-
-// Mở form đăng nhập
-function openLoginForm() {
-    document.getElementById('loginForm').style.display = 'flex';
-}
-
-// Đóng form đăng nhập
-function closeLoginForm() {
-    document.getElementById('loginForm').style.display = 'none';
-}
-
-// Dữ liệu tài khoản giả lập
 const users = [
     { username: "admin", password: "admin123" },
     { username: "user1", password: "password1" }
 ];
 
-// Xử lý đăng nhập
+// Xử lý tìm kiếm sách
+document.getElementById('search-form').addEventListener('submit', function(event) {
+    event.preventDefault(); 
+    const query = document.getElementById('search-query').value.toLowerCase();
+    const searchResults = books.filter(book => book.title.toLowerCase().includes(query));
+    displaySearchResults(searchResults);
+});
+
+// Hiển thị kết quả tìm kiếm
+function displaySearchResults(searchResults) {
+    const results = document.getElementById('search-results');
+    results.innerHTML = ''; 
+    if (searchResults.length > 0) {
+        searchResults.forEach(book => {
+            const li = document.createElement('div');
+            li.className = 'book-item';
+            li.innerHTML = `
+                <img src="${book.image}" alt="${book.title}">
+                <div class="book-details">
+                    <strong>${book.title}</strong> - ${book.author} <br>
+                    Thể loại: ${book.category} <br>
+                    Còn lại: ${book.available} quyển
+                </div>
+                <button onclick="borrowBook('${book.title}')">Mượn sách</button>
+            `;
+            results.appendChild(li);
+        });
+    } else {
+        results.innerHTML = '<p>Không tìm thấy sách nào</p>';
+    }
+}
+
+// Xử lý mượn sách
+function borrowBook(bookTitle) {
+    let book = books.find(b => b.title === bookTitle);
+    if (book && book.available > 0) {
+        book.available--;
+        alert(`Bạn đã mượn sách: ${book.title}`);
+        displaySearchResults(books.filter(b => b.available > 0));
+    } else if (book) {
+        alert(`Sách ${book.title} đã hết!`);
+    }
+}
+
+// Đăng nhập
+function openLoginForm() {
+    document.getElementById('loginForm').style.display = 'flex';
+}
+
+function closeLoginForm() {
+    document.getElementById('loginForm').style.display = 'none';
+}
+
 function login() {
     const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
-
-    // Kiểm tra tài khoản và mật khẩu
+    const password = document.getElementById('password').value; 
     const user = users.find(user => user.username === username && user.password === password);
     
     if (user) {
         alert("Đăng nhập thành công!");
-        closeLoginForm();
+        closeLoginForm(); 
         document.querySelector('.login-button button').textContent = `Xin chào, ${user.username}`;
     } else {
-        alert("Tên đăng nhập hoặc mật khẩu không đúng!");
+        alert('Tên đăng nhập hoặc mật khẩu không đúng!');
     }
+}
+
+// Phần tiện ích
+function toggleUtility() {
+    const utilityMenu = document.getElementById("utility-menu");
+    utilityMenu.style.display = utilityMenu.style.display === 'none' ? 'block' : 'none';
+}
+function showForm(formId) {
+    document.querySelectorAll('.form-section > div').forEach(form => {
+        form.style.display = 'none'; // Ẩn tất cả các form
+    });
+    document.getElementById(formId).style.display = 'block'; // Hiển thị form đã chọn
+}
+
+function returnBook() {
+    const returnTitle = document.getElementById('returnBookTitle').value;
+    let book = books.find(b => b.title === returnTitle);
+    if (book) {
+        book.available++;
+        alert(`Bạn đã trả sách: ${book.title}`);
+    } else {
+        alert('Không tìm thấy sách để trả.');
+    }
+    document.getElementById('returnBookTitle').value = ''; 
+}
+
+document.getElementById('add-book-form-element').addEventListener('submit', function(event) {
+    event.preventDefault(); 
+    const title = document.getElementById('book-title').value;
+    const author = document.getElementById('book-author').value;
+    const genre = document.getElementById('book-genre').value;
+
+    books.push({ title, author, category: genre, image: 'assets/default.jpg', available: 1 });
+    alert(`Đã thêm sách: ${title}`);
+    document.getElementById('add-book-form-element').reset();
+});
+// Hàm hiển thị tất cả sách
+function showAllBooks() {
+    displaySearchResults(books);
 }
