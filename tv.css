@@ -127,6 +127,10 @@ header {
     height: 150px;
     object-fit: cover;
     border-radius: 5px;
+    border: 1px solid #333;
+}
+.book-item img :hover{
+
 }
 
 .book-item p {
@@ -254,4 +258,14 @@ footer {
 .news-item p {
     margin: 10px 0 0 0;
     color: #333;
+}
+.hr{
+    display: block;
+    margin-top: 15px;
+    font-size: 10px;
+    text-decoration: none;
+    box-sizing: border-box;
+}
+.hr :hover{
+    text-decoration: overline;
 }

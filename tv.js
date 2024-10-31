@@ -17,13 +17,46 @@ let books = [
     { title: 'Lập trình Python', author: 'Tác giả P', category: 'Kỹ thuật', image: 'assets/python.jpg', available: 2 },
     { title: 'Tiểu thuyết 4', author: 'Tác giả Q', category: 'Văn học', image: 'assets/truyen.jpg', available: 2 },
     { title: 'Tiểu thuyết 5', author: 'Tác giả Z', category: 'Văn học', image: 'assets/tt.jpg', available: 2 },
-    { title: 'Nhà giả kim', author: 'Tác giả Z', category: 'Văn học', image: 'assets/ngk.jpg', available: 2 },
+    { title: 'Nhà giả kim', author: 'Tác giả T', category: 'Văn học', image: 'assets/ngk.jpg', available: 2 },
 ];
 
 const users = [
     { username: "admin", password: "admin123" },
     { username: "user1", password: "password1" }
 ];
+
+//thanh bar
+const toggleButton = document.getElementById('toggle-btn')
+const sidebar = document.getElementById('sidebar')
+
+function toggleSidebar(){
+  sidebar.classList.toggle('close')
+  toggleButton.classList.toggle('rotate')
+
+  closeAllSubMenus()
+}
+
+function toggleSubMenu(button){
+
+  if(!button.nextElementSibling.classList.contains('show')){
+    closeAllSubMenus()
+  }
+
+  button.nextElementSibling.classList.toggle('show')
+  button.classList.toggle('rotate')
+
+  if(sidebar.classList.contains('close')){
+    sidebar.classList.toggle('close')
+    toggleButton.classList.toggle('rotate')
+  }
+}
+
+function closeAllSubMenus(){
+  Array.from(sidebar.getElementsByClassName('show')).forEach(ul => {
+    ul.classList.remove('show')
+    ul.previousElementSibling.classList.remove('rotate')
+  })
+}
 
 // Xử lý tìm kiếm sách
 document.getElementById('search-form').addEventListener('submit', function(event) {
