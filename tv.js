@@ -163,3 +163,11 @@ document.getElementById('add-book-form-element').addEventListener('submit', func
 function showAllBooks() {
     displaySearchResults(books);
 }
+function toggleInfo() {
+    const bookInfo = document.getElementById('bookInfo');
+    if (bookInfo.style.display === 'none' || !bookInfo.style.display) {
+        bookInfo.style.display = 'block';
+    } else {
+        bookInfo.style.display = 'none';
+    }
+}
