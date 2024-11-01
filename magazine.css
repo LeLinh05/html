@@ -5,7 +5,7 @@
         padding: 0;
       }
       header {
-        background: #4caf50;
+        background: #223045;
         color: white;
         padding: 10px 20px;
         text-align: center;
@@ -31,7 +31,7 @@
       }
       .sidebar a.active {
         font-weight: bold;
-        color: #4caf50;
+        color: #223045;
       }
       .content {
         flex: 1;
@@ -40,7 +40,7 @@
       footer {
         text-align: center;
         padding: 10px;
-        background: #4caf50;
+        background: #223045;
         color: white;
         position: relative;
         bottom: 0;
@@ -76,4 +76,17 @@
       .magazine-item p {
         font-size: 14px;
         color: #666;
+      }
+      .magazine-item img{
+        
+      }
+      .magazine-item a{
+        text-decoration: none;
+        color: #333;
+        font-size: 14px;
+      }
+      .magazine-item a :hover{
+        color: crimson;
+        font-size: 20px;
+
       }
