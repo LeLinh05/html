@@ -12,55 +12,62 @@ let books = [
     { title: 'ktlt', author: 'Tác giả K', category: 'Kỹ thuật', image: 'assets/ktlt.jpg', available: 1 },
     { title: 'Cuộc sống và lập trình', author: 'Tác giả L', category: 'Kỹ thuật', image: 'assets/ls.jpg', available: 21 },
     { title: 'Tiểu thuyết 2', author: 'Tác giả M', category: 'Văn học', image: 'assets/nmt.jpg', available: 10 },
-    { title: 'Tiểu thuyết 3', author: 'Tác giả N', category: 'Văn học', image: 'assets/nvscc.jpg', available: 2 } ,
+    { title: 'Tiểu thuyết 3', author: 'Tác giả N', category: 'Văn học', image: 'assets/nvscc.jpg', available: 2 },
     { title: 'Tiếng anh chuyên ngành', author: 'Tác giả O', category: 'Ngôn ngữ', image: 'assets/ta.jpg', available: 6 },
     { title: 'Lập trình Python', author: 'Tác giả P', category: 'Kỹ thuật', image: 'assets/python.jpg', available: 2 },
     { title: 'Tiểu thuyết 4', author: 'Tác giả Q', category: 'Văn học', image: 'assets/truyen.jpg', available: 2 },
     { title: 'Tiểu thuyết 5', author: 'Tác giả Z', category: 'Văn học', image: 'assets/tt.jpg', available: 2 },
     { title: 'Nhà giả kim', author: 'Tác giả T', category: 'Văn học', image: 'assets/ngk.jpg', available: 2 },
-];
-
+]
 const users = [
-    { username: "admin", password: "admin123" },
-    { username: "user1", password: "password1" }
+    { username: "admin", password: "admin123", role: "admin"},
+    { username: "user1", password: "password1", role: "user" }
 ];
-
-//thanh bar
-const toggleButton = document.getElementById('toggle-btn')
-const sidebar = document.getElementById('sidebar')
-
-function toggleSidebar(){
-  sidebar.classList.toggle('close')
-  toggleButton.classList.toggle('rotate')
-
-  closeAllSubMenus()
+let currentUser = null;
+function isAuthenticated() {
+    return currentUser !== null;
+}
+function isAdmin() {
+    return currentUser && currentUser.role === 'admin';
+}
+// Xử lý đăng nhập
+function login() {
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value; 
+    currentUser = users.find(user => user.username === username && user.password === password);
+    
+    if (currentUser) {
+        alert("Đăng nhập thành công!");
+        document.querySelector('.login-button button').textContent = `Xin chào, ${currentUser.username}`;
+        closeLoginForm(); 
+        toggleAdminFunctions();
+    } else {
+        alert('Tên đăng nhập hoặc mật khẩu không đúng!');
+    }
 }
 
-function toggleSubMenu(button){
-
-  if(!button.nextElementSibling.classList.contains('show')){
-    closeAllSubMenus()
-  }
-
-  button.nextElementSibling.classList.toggle('show')
-  button.classList.toggle('rotate')
-
-  if(sidebar.classList.contains('close')){
-    sidebar.classList.toggle('close')
-    toggleButton.classList.toggle('rotate')
-  }
+// Hiển thị hoặc ẩn các chức năng cho admin
+function toggleAdminFunctions() {
+    const adminFunctions = document.getElementById('admin-functions');
+    if (isAdmin()) {
+        adminFunctions.style.display = 'block';
+    } else {
+        adminFunctions.style.display = 'none';
+    }
 }
 
-function closeAllSubMenus(){
-  Array.from(sidebar.getElementsByClassName('show')).forEach(ul => {
-    ul.classList.remove('show')
-    ul.previousElementSibling.classList.remove('rotate')
-  })
+// Tắt form đăng nhập
+function closeLoginForm() {
+    document.getElementById('loginForm').style.display = 'none';
 }
 
 // Xử lý tìm kiếm sách
 document.getElementById('search-form').addEventListener('submit', function(event) {
     event.preventDefault(); 
+    if (!isAuthenticated()) {
+        alert('Bạn cần đăng nhập để sử dụng chức năng này.');
+        return;
+    }
     const query = document.getElementById('search-query').value.toLowerCase();
     const searchResults = books.filter(book => book.title.toLowerCase().includes(query));
     displaySearchResults(searchResults);
@@ -89,9 +96,22 @@ function displaySearchResults(searchResults) {
         results.innerHTML = '<p>Không tìm thấy sách nào</p>';
     }
 }
-
+function toggleUtility() {
+    const utilityMenu = document.getElementById("utility-menu");
+    utilityMenu.style.display = utilityMenu.style.display === 'none' ? 'block' : 'none';
+}
+function showForm(formId) {
+    document.querySelectorAll('.form-section > div').forEach(form => {
+        form.style.display = 'none'; // Ẩn tất cả các form
+    });
+    document.getElementById(formId).style.display = 'block';
+}
 // Xử lý mượn sách
 function borrowBook(bookTitle) {
+    if (!isAuthenticated()) {
+        alert('Bạn cần đăng nhập để sử dụng chức năng này.');
+        return;
+    }
     let book = books.find(b => b.title === bookTitle);
     if (book && book.available > 0) {
         book.available--;
@@ -102,42 +122,12 @@ function borrowBook(bookTitle) {
     }
 }
 
-// Đăng nhập
-function openLoginForm() {
-    document.getElementById('loginForm').style.display = 'flex';
-}
-
-function closeLoginForm() {
-    document.getElementById('loginForm').style.display = 'none';
-}
-
-function login() {
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value; 
-    const user = users.find(user => user.username === username && user.password === password);
-    
-    if (user) {
-        alert("Đăng nhập thành công!");
-        closeLoginForm(); 
-        document.querySelector('.login-button button').textContent = `Xin chào, ${user.username}`;
-    } else {
-        alert('Tên đăng nhập hoặc mật khẩu không đúng!');
-    }
-}
-
-// Phần tiện ích
-function toggleUtility() {
-    const utilityMenu = document.getElementById("utility-menu");
-    utilityMenu.style.display = utilityMenu.style.display === 'none' ? 'block' : 'none';
-}
-function showForm(formId) {
-    document.querySelectorAll('.form-section > div').forEach(form => {
-        form.style.display = 'none'; // Ẩn tất cả các form
-    });
-    document.getElementById(formId).style.display = 'block'; // Hiển thị form đã chọn
-}
-
+// Xử lý trả sách
 function returnBook() {
+    if (!isAuthenticated()) {
+        alert('Bạn cần đăng nhập để sử dụng chức năng này.');
+        return;
+    }
     const returnTitle = document.getElementById('returnBookTitle').value;
     let book = books.find(b => b.title === returnTitle);
     if (book) {
@@ -149,8 +139,15 @@ function returnBook() {
     document.getElementById('returnBookTitle').value = ''; 
 }
 
+// Xử lý thêm sách (chỉ dành cho admin)
 document.getElementById('add-book-form-element').addEventListener('submit', function(event) {
     event.preventDefault(); 
+
+    if (!isAuthenticated() || !isAdmin()) {
+        alert("Bạn không có quyền thêm sách.");
+        return;
+    }
+
     const title = document.getElementById('book-title').value;
     const author = document.getElementById('book-author').value;
     const genre = document.getElementById('book-genre').value;
@@ -159,8 +156,22 @@ document.getElementById('add-book-form-element').addEventListener('submit', func
     alert(`Đã thêm sách: ${title}`);
     document.getElementById('add-book-form-element').reset();
 });
-// Hàm hiển thị tất cả sách
+
+// Hiển thị tất cả sách
 function showAllBooks() {
+    if (!isAuthenticated()) {
+        alert('Bạn cần đăng nhập để sử dụng chức năng này.');
+        return;
+    }
     displaySearchResults(books);
 }
 
+// Mở form đăng nhập
+function openLoginForm() {
+    document.getElementById('loginForm').style.display = 'flex';
+}
+
+// Tắt form đăng nhập
+function closeLoginForm() {
+    document.getElementById('loginForm').style.display = 'none';
+}
